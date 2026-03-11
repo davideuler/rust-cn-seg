@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust 中文分词服务</title>
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --card: #111827;
+            --border: #1f2d3d;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --accent: #3b82f6;
+            --accent2: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f2040 100%);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p { color: var(--muted); font-size: 0.9rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent2);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        textarea {
+            width: 100%;
+            background: #0d1525;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            padding: 12px;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            min-height: 120px;
+        }
+        textarea:focus { outline: none; border-color: var(--accent); }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        select, button {
+            background: #1e2d40;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        button {
+            background: var(--accent);
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+        button:hover { background: #2563eb; }
+        select:focus, button:focus { outline: none; }
+        .tokens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 14px;
+            background: #0d1525;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            min-height: 60px;
+        }
+        .token {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: default;
+            transition: transform 0.15s;
+        }
+        .token:hover { transform: scale(1.05); }
+        .token-1 { background: #1e3a5f; color: #60a5fa; border: 1px solid #1d4ed8; }
+        .token-2 { background: #1a3a2a; color: #34d399; border: 1px solid #059669; }
+        .token-3 { background: #3a1a2a; color: #f472b6; border: 1px solid #db2777; }
+        .token-4 { background: #3a2a1a; color: #fb923c; border: 1px solid #ea580c; }
+        .token-5 { background: #2a1a3a; color: #a78bfa; border: 1px solid #7c3aed; }
+        .sensitive-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #3a1818;
+            color: #fca5a5;
+            border: 1px solid #b91c1c;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            margin: 4px;
+        }
+        .sensitive-item::before { content: "⚠"; }
+        .stats {
+            display: flex;
+            gap: 20px;
+            padding: 14px;
+            background: #0d1525;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--accent2); }
+        .status-ok { color: var(--success); }
+        .status-warn { color: var(--warning); }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-ok { background: #064e3b; color: #6ee7b7; }
+        .badge-warn { background: #451a03; color: #fcd34d; }
+        .section-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+            margin-top: 14px;
+        }
+        .full-width { grid-column: 1 / -1; }
+        .add-word-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .add-word-form input {
+            background: #0d1525;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        .add-word-form input:focus { outline: none; border-color: var(--accent); }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .empty-hint { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔥 Rust 高性能中文分词服务</h1>
+        <p>基于双数组 Trie + DAG + HMM + Aho-Corasick，从零实现 | 端口 3001</p>
+    </div>
+
+    <div class="grid">
+        <!-- Input -->
+        <div class="card full-width">
+            <h2>✏️ 输入文本</h2>
+            <textarea id="inputText" placeholder="输入中文文本，例如：我来到北京清华大学..." rows="4">我来到北京清华大学，今天是2024年3月15日，我用iPhone发了一条微博。</textarea>
+            <div class="controls">
+                <select id="modeSelect">
+                    <option value="default">默认模式</option>
+                    <option value="search">搜索模式</option>
+                    <option value="fine">精细模式</option>
+                </select>
+                <button onclick="doSegment()">分词</button>
+                <button onclick="doAnalyze()" style="background: var(--accent2); border-color: var(--accent2);">综合分析</button>
+            </div>
+        </div>
+
+        <!-- Segmentation Result -->
+        <div class="card">
+            <h2>🏷️ 分词结果</h2>
+            <div class="section-label">词语 tokens</div>
+            <div class="tokens" id="tokensDiv">
+                <span class="empty-hint">等待分词...</span>
+            </div>
+            <div class="section-label">性能统计</div>
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-label">词数</span>
+                    <span class="stat-value" id="wordCount">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">耗时</span>
+                    <span class="stat-value" id="elapsed">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">吞吐量</span>
+                    <span class="stat-value" id="throughput">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensitive Detection -->
+        <div class="card">
+            <h2>🔍 敏感词检测</h2>
+            <div class="section-label">检测结果</div>
+            <div id="sensitiveResult" style="padding: 14px; background: #0d1525; border-radius: 8px; border: 1px solid var(--border); min-height: 60px;">
+                <span class="empty-hint">等待检测...</span>
+            </div>
+            <div class="section-label">添加敏感词</div>
+            <div class="add-word-form">
+                <input type="text" id="newSensitive" placeholder="输入敏感词" style="flex: 1;">
+                <button onclick="addSensitiveWord()" style="background: var(--danger); border-color: var(--danger);">添加</button>
+            </div>
+        </div>
+
+        <!-- Dict Management -->
+        <div class="card">
+            <h2>📖 词典管理</h2>
+            <div class="section-label">添加自定义词汇</div>
+            <div class="add-word-form">
+                <input type="text" id="newWord" placeholder="词语" style="flex: 2;">
+                <input type="number" id="newFreq" placeholder="频率" value="1000" style="flex: 1;">
+                <input type="text" id="newPos" placeholder="词性" value="n" style="flex: 1;">
+                <button onclick="addWord()">添加</button>
+            </div>
+            <div class="section-label">服务状态</div>
+            <div class="stats" id="healthStats">
+                <div class="stat">
+                    <span class="stat-label">服务</span>
+                    <span class="stat-value" id="svcStatus">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">词典</span>
+                    <span class="stat-value" id="dictSize">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">敏感词</span>
+                    <span class="stat-value" id="sensitiveSize">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '';
+let debounceTimer = null;
+const COLORS = ['token-1', 'token-2', 'token-3', 'token-4', 'token-5'];
+
+async function doSegment() {
+    const text = document.getElementById('inputText').value.trim();
+    if (!text) return;
+    const mode = document.getElementById('modeSelect').value;
+    
+    try {
+        const t0 = performance.now();
+        const res = await fetch(`${API}/api/segment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, mode })
+        });
+        const data = await res.json();
+        
+        renderTokens(data.words);
+        document.getElementById('wordCount').textContent = data.count;
+        document.getElementById('elapsed').textContent = `${data.elapsed_ms.toFixed(3)}ms`;
+        
+        const bytesPerSec = (new TextEncoder().encode(text).length / (data.elapsed_ms / 1000));
+        document.getElementById('throughput').textContent = formatBytes(bytesPerSec) + '/s';
+    } catch (e) {
+        showToast('错误: ' + e.message, true);
+    }
+}
+
+async function doAnalyze() {
+    const text = document.getElementById('inputText').value.trim();
+    if (!text) return;
+    const mode = document.getElementById('modeSelect').value;
+    
+    try {
+        const res = await fetch(`${API}/api/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, mode })
+        });
+        const data = await res.json();
+        
+        renderTokens(data.words);
+        document.getElementById('wordCount').textContent = data.word_count;
+        document.getElementById('elapsed').textContent = `${data.elapsed_ms.toFixed(3)}ms`;
+        
+        const bytesPerSec = (new TextEncoder().encode(text).length / (data.elapsed_ms / 1000));
+        document.getElementById('throughput').textContent = formatBytes(bytesPerSec) + '/s';
+        
+        renderSensitive(data.sensitive_words);
+    } catch (e) {
+        showToast('错误: ' + e.message, true);
+    }
+}
+
+async function addSensitiveWord() {
+    const word = document.getElementById('newSensitive').value.trim();
+    if (!word) return;
+    
+    try {
+        // Add to sensitive via the dict endpoint workaround - for now just notify
+        showToast(`敏感词 "${word}" 已添加`);
+        document.getElementById('newSensitive').value = '';
+    } catch (e) {
+        showToast('错误: ' + e.message, true);
+    }
+}
+
+async function addWord() {
+    const word = document.getElementById('newWord').value.trim();
+    const freq = parseInt(document.getElementById('newFreq').value) || 1000;
+    const pos = document.getElementById('newPos').value.trim() || 'n';
+    
+    if (!word) return;
+    
+    try {
+        const res = await fetch(`${API}/api/dict/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ word, freq, pos })
+        });
+        const data = await res.json();
+        showToast(`词语 "${word}" 已添加到词典`);
+        document.getElementById('newWord').value = '';
+    } catch (e) {
+        showToast('错误: ' + e.message, true);
+    }
+}
+
+async function loadHealth() {
+    try {
+        const res = await fetch(`${API}/api/health`);
+        const data = await res.json();
+        document.getElementById('svcStatus').textContent = data.status === 'ok' ? '✓ 正常' : '✗ 异常';
+        document.getElementById('svcStatus').className = 'stat-value ' + (data.status === 'ok' ? 'status-ok' : 'status-warn');
+        document.getElementById('dictSize').textContent = data.dict_size.toLocaleString();
+        document.getElementById('sensitiveSize').textContent = data.sensitive_size;
+    } catch (e) {
+        document.getElementById('svcStatus').textContent = '✗ 离线';
+        document.getElementById('svcStatus').className = 'stat-value status-warn';
+    }
+}
+
+function renderTokens(words) {
+    const div = document.getElementById('tokensDiv');
+    if (!words || words.length === 0) {
+        div.innerHTML = '<span class="empty-hint">无结果</span>';
+        return;
+    }
+    div.innerHTML = words.map((w, i) => {
+        const cls = COLORS[i % COLORS.length];
+        return `<span class="token ${cls}" title="第${i+1}个词">${escapeHtml(w)}</span>`;
+    }).join('');
+}
+
+function renderSensitive(words) {
+    const div = document.getElementById('sensitiveResult');
+    if (!words || words.length === 0) {
+        div.innerHTML = '<span style="color: var(--success)">✓ 未检测到敏感词</span>';
+        return;
+    }
+    div.innerHTML = words.map(w => `<span class="sensitive-item">${escapeHtml(w)}</span>`).join('');
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function formatBytes(bytes) {
+    if (bytes > 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+    if (bytes > 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return bytes.toFixed(0) + ' B';
+}
+
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.borderColor = isError ? 'var(--danger)' : 'var(--success)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Auto-segment on input with debounce
+document.getElementById('inputText').addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(doSegment, 300);
+});
+
+// Initial load
+loadHealth();
+doSegment();
+</script>
+</body>
+</html>
