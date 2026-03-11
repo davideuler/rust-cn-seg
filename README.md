@@ -46,6 +46,9 @@ cargo build --release
 # 服务启动在 http://localhost:3001
 ```
 
+![Segmentation Service Webpage](static/segmentation.png)
+
+
 ## API
 
 ### 分词
