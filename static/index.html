@@ -16,6 +16,7 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --code-bg: #0d1117;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -43,6 +44,40 @@
         }
         .header p { color: var(--muted); font-size: 0.9rem; }
         .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ── Page Tabs ── */
+        .page-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px;
+        }
+        .page-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--muted);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .page-tab:hover { color: var(--text); background: #1e2d40; }
+        .page-tab.active {
+            background: linear-gradient(135deg, #1e3a5f, #0f2040);
+            color: var(--accent2);
+            border-color: var(--border);
+        }
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+
+        /* ── Demo grid ── */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
         .card {
@@ -199,6 +234,175 @@
         }
         .toast.show { opacity: 1; transform: translateY(0); }
         .empty-hint { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+
+        /* ── API Docs ── */
+        .api-docs { display: flex; flex-direction: column; gap: 20px; }
+
+        .api-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .api-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: linear-gradient(90deg, #0f2040 0%, #111827 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .method-badge {
+            background: #1e3a5f;
+            color: #60a5fa;
+            border: 1px solid #1d4ed8;
+            border-radius: 5px;
+            padding: 3px 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+        }
+        .api-path {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: var(--accent2);
+            font-weight: 600;
+        }
+        .api-desc {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+        .api-card-body { padding: 16px 20px; }
+
+        /* request/response schema row */
+        .schema-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 768px) { .schema-row { grid-template-columns: 1fr; } }
+        .schema-box h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+        .json-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 12px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        /* JSON syntax highlight */
+        .jk { color: #9cdcfe; }   /* key */
+        .js { color: #ce9178; }   /* string value */
+        .jn { color: #b5cea8; }   /* number */
+        .jb { color: #569cd6; }   /* bool/null */
+        .jp { color: #808080; }   /* punctuation */
+
+        /* language tabs */
+        .lang-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+        .lang-tab {
+            padding: 7px 16px;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .lang-tab:hover { color: var(--text); background: #1e2d40; }
+        .lang-tab.active {
+            background: var(--code-bg);
+            color: var(--accent2);
+            border-color: var(--border);
+            border-bottom: 1px solid var(--code-bg);
+            margin-bottom: -1px;
+            position: relative;
+            z-index: 1;
+        }
+        .lang-panels { position: relative; }
+        .lang-panel { display: none; position: relative; }
+        .lang-panel.active { display: block; }
+        .code-block-wrap {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 0 0 7px 7px;
+            position: relative;
+        }
+        .code-block-wrap pre {
+            padding: 16px 16px 16px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #1e2d40;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--muted);
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+            z-index: 2;
+        }
+        .copy-btn:hover { background: #263d55; color: var(--text); }
+        .copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+        /* Code highlight colors (VS Code Dark+) */
+        .kw  { color: #569cd6; }   /* keyword */
+        .fn  { color: #dcdcaa; }   /* function */
+        .str { color: #ce9178; }   /* string */
+        .num { color: #b5cea8; }   /* number */
+        .cmt { color: #6a9955; }   /* comment */
+        .cls { color: #4ec9b0; }   /* class/type */
+        .var { color: #9cdcfe; }   /* variable */
+        .op  { color: #d4d4d4; }   /* operator/punct */
+        .attr{ color: #92c4e4; }   /* attribute */
+        .mac { color: #dcdcaa; }   /* macro */
+
+        /* API docs footer */
+        .api-footer {
+            margin-top: 24px;
+            text-align: center;
+            padding: 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .api-footer span {
+            font-family: 'Courier New', monospace;
+            color: var(--accent2);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -208,88 +412,485 @@
         <p>基于双数组 Trie + DAG + HMM + Aho-Corasick，从零实现 | 端口 3001</p>
     </div>
 
-    <div class="grid">
-        <!-- Input -->
-        <div class="card full-width">
-            <h2>✏️ 输入文本</h2>
-            <textarea id="inputText" placeholder="输入中文文本，例如：我来到北京清华大学..." rows="4">我来到北京清华大学，今天是2024年3月15日，我用iPhone发了一条微博。</textarea>
-            <div class="controls">
-                <select id="modeSelect">
-                    <option value="default">默认模式</option>
-                    <option value="search">搜索模式</option>
-                    <option value="fine">精细模式</option>
-                </select>
-                <button onclick="doSegment()">分词</button>
-                <button onclick="doAnalyze()" style="background: var(--accent2); border-color: var(--accent2);">综合分析</button>
-            </div>
-        </div>
-
-        <!-- Segmentation Result -->
-        <div class="card">
-            <h2>🏷️ 分词结果</h2>
-            <div class="section-label">词语 tokens</div>
-            <div class="tokens" id="tokensDiv">
-                <span class="empty-hint">等待分词...</span>
-            </div>
-            <div class="section-label">性能统计</div>
-            <div class="stats">
-                <div class="stat">
-                    <span class="stat-label">词数</span>
-                    <span class="stat-value" id="wordCount">-</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">耗时</span>
-                    <span class="stat-value" id="elapsed">-</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">吞吐量</span>
-                    <span class="stat-value" id="throughput">-</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sensitive Detection -->
-        <div class="card">
-            <h2>🔍 敏感词检测</h2>
-            <div class="section-label">检测结果</div>
-            <div id="sensitiveResult" style="padding: 14px; background: #0d1525; border-radius: 8px; border: 1px solid var(--border); min-height: 60px;">
-                <span class="empty-hint">等待检测...</span>
-            </div>
-            <div class="section-label">添加敏感词</div>
-            <div class="add-word-form">
-                <input type="text" id="newSensitive" placeholder="输入敏感词" style="flex: 1;">
-                <button onclick="addSensitiveWord()" style="background: var(--danger); border-color: var(--danger);">添加</button>
-            </div>
-        </div>
-
-        <!-- Dict Management -->
-        <div class="card">
-            <h2>📖 词典管理</h2>
-            <div class="section-label">添加自定义词汇</div>
-            <div class="add-word-form">
-                <input type="text" id="newWord" placeholder="词语" style="flex: 2;">
-                <input type="number" id="newFreq" placeholder="频率" value="1000" style="flex: 1;">
-                <input type="text" id="newPos" placeholder="词性" value="n" style="flex: 1;">
-                <button onclick="addWord()">添加</button>
-            </div>
-            <div class="section-label">服务状态</div>
-            <div class="stats" id="healthStats">
-                <div class="stat">
-                    <span class="stat-label">服务</span>
-                    <span class="stat-value" id="svcStatus">-</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">词典</span>
-                    <span class="stat-value" id="dictSize">-</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">敏感词</span>
-                    <span class="stat-value" id="sensitiveSize">-</span>
-                </div>
-            </div>
-        </div>
+    <!-- Page Tabs -->
+    <div class="page-tabs">
+        <div class="page-tab active" onclick="switchPage('demo', this)">⚡ 分词演示</div>
+        <div class="page-tab" onclick="switchPage('docs', this)">📖 API 文档</div>
     </div>
-</div>
+
+    <!-- ═══ Page: Demo ═══ -->
+    <div class="page-content active" id="page-demo">
+        <div class="grid">
+            <!-- Input -->
+            <div class="card full-width">
+                <h2>✏️ 输入文本</h2>
+                <textarea id="inputText" placeholder="输入中文文本，例如：我来到北京清华大学..." rows="4">我来到北京清华大学，今天是2024年3月15日，我用iPhone发了一条微博。</textarea>
+                <div class="controls">
+                    <select id="modeSelect">
+                        <option value="default">默认模式</option>
+                        <option value="search">搜索模式</option>
+                        <option value="fine">精细模式</option>
+                    </select>
+                    <button onclick="doSegment()">分词</button>
+                    <button onclick="doAnalyze()" style="background: var(--accent2); border-color: var(--accent2);">综合分析</button>
+                </div>
+            </div>
+
+            <!-- Segmentation Result -->
+            <div class="card">
+                <h2>🏷️ 分词结果</h2>
+                <div class="section-label">词语 tokens</div>
+                <div class="tokens" id="tokensDiv">
+                    <span class="empty-hint">等待分词...</span>
+                </div>
+                <div class="section-label">性能统计</div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">词数</span>
+                        <span class="stat-value" id="wordCount">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">耗时</span>
+                        <span class="stat-value" id="elapsed">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">吞吐量</span>
+                        <span class="stat-value" id="throughput">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensitive Detection -->
+            <div class="card">
+                <h2>🔍 敏感词检测</h2>
+                <div class="section-label">检测结果</div>
+                <div id="sensitiveResult" style="padding: 14px; background: #0d1525; border-radius: 8px; border: 1px solid var(--border); min-height: 60px;">
+                    <span class="empty-hint">等待检测...</span>
+                </div>
+                <div class="section-label">添加敏感词</div>
+                <div class="add-word-form">
+                    <input type="text" id="newSensitive" placeholder="输入敏感词" style="flex: 1;">
+                    <button onclick="addSensitiveWord()" style="background: var(--danger); border-color: var(--danger);">添加</button>
+                </div>
+            </div>
+
+            <!-- Dict Management -->
+            <div class="card">
+                <h2>📖 词典管理</h2>
+                <div class="section-label">添加自定义词汇</div>
+                <div class="add-word-form">
+                    <input type="text" id="newWord" placeholder="词语" style="flex: 2;">
+                    <input type="number" id="newFreq" placeholder="频率" value="1000" style="flex: 1;">
+                    <input type="text" id="newPos" placeholder="词性" value="n" style="flex: 1;">
+                    <button onclick="addWord()">添加</button>
+                </div>
+                <div class="section-label">服务状态</div>
+                <div class="stats" id="healthStats">
+                    <div class="stat">
+                        <span class="stat-label">服务</span>
+                        <span class="stat-value" id="svcStatus">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">词典</span>
+                        <span class="stat-value" id="dictSize">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">敏感词</span>
+                        <span class="stat-value" id="sensitiveSize">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /page-demo -->
+
+    <!-- ═══ Page: API Docs ═══ -->
+    <div class="page-content" id="page-docs">
+        <div class="api-docs">
+
+            <!-- ── 1. POST /api/segment ── -->
+            <div class="api-card">
+                <div class="api-card-header">
+                    <span class="method-badge">POST</span>
+                    <span class="api-path">/api/segment</span>
+                    <span class="api-desc">中文分词</span>
+                </div>
+                <div class="api-card-body">
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>请求体 Request Body</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"text"</span><span class="jp">:</span> <span class="js">"我来到北京清华大学"</span><span class="jp">,</span>
+  <span class="jk">"mode"</span><span class="jp">:</span> <span class="js">"default"</span>
+<span class="jp">}</span></div>
+                        </div>
+                        <div class="schema-box">
+                            <h4>响应 Response</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"words"</span><span class="jp">:</span> <span class="jp">[</span><span class="js">"我"</span><span class="jp">,</span> <span class="js">"来到"</span><span class="jp">,</span> <span class="js">"北京"</span><span class="jp">,</span> <span class="js">"清华大学"</span><span class="jp">],</span>
+  <span class="jk">"count"</span><span class="jp">:</span> <span class="jn">4</span><span class="jp">,</span>
+  <span class="jk">"elapsed_ms"</span><span class="jp">:</span> <span class="jn">0.08</span>
+<span class="jp">}</span></div>
+                        </div>
+                    </div>
+                    <div class="lang-tabs" id="tabs-segment">
+                        <div class="lang-tab active" onclick="switchLang('segment','curl',this)">curl</div>
+                        <div class="lang-tab" onclick="switchLang('segment','python',this)">Python</div>
+                        <div class="lang-tab" onclick="switchLang('segment','ts',this)">TypeScript</div>
+                        <div class="lang-tab" onclick="switchLang('segment','rust',this)">Rust</div>
+                    </div>
+                    <div class="lang-panels">
+                        <div class="lang-panel active" id="panel-segment-curl">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="var">curl</span> <span class="op">-X</span> POST http://localhost:3001/api/segment \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"text": "我来到北京清华大学", "mode": "default"}'</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-segment-python">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">import</span> <span class="cls">requests</span>
+
+response <span class="op">=</span> <span class="cls">requests</span><span class="op">.</span><span class="fn">post</span><span class="op">(</span>
+    <span class="str">"http://localhost:3001/api/segment"</span><span class="op">,</span>
+    json<span class="op">={</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> <span class="str">"mode"</span><span class="op">:</span> <span class="str">"default"</span><span class="op">}</span>
+<span class="op">)</span>
+result <span class="op">=</span> response<span class="op">.</span><span class="fn">json</span><span class="op">()</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"words"</span><span class="op">])</span>      <span class="cmt"># ['我', '来到', '北京', '清华大学']</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"elapsed_ms"</span><span class="op">])</span>  <span class="cmt"># e.g. 0.08</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-segment-ts">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span><span class="op">(</span><span class="str">"http://localhost:3001/api/segment"</span><span class="op">, {</span>
+  method<span class="op">:</span> <span class="str">"POST"</span><span class="op">,</span>
+  headers<span class="op">: {</span> <span class="str">"Content-Type"</span><span class="op">:</span> <span class="str">"application/json"</span> <span class="op">},</span>
+  body<span class="op">:</span> <span class="cls">JSON</span><span class="op">.</span><span class="fn">stringify</span><span class="op">({</span> text<span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> mode<span class="op">:</span> <span class="str">"default"</span> <span class="op">}),</span>
+<span class="op">});</span>
+<span class="kw">const</span> result <span class="op">=</span> <span class="kw">await</span> response<span class="op">.</span><span class="fn">json</span><span class="op">();</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>words<span class="op">);</span>      <span class="cmt">// ['我', '来到', '北京', '清华大学']</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>elapsed_ms<span class="op">);</span> <span class="cmt">// 0.08</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-segment-rust">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">use</span> reqwest<span class="op">::</span><span class="cls">Client</span><span class="op">;</span>
+<span class="kw">use</span> serde_json<span class="op">::</span><span class="mac">json</span><span class="op">;</span>
+
+<span class="attr">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span><span class="op">() -&gt;</span> <span class="cls">Result</span><span class="op">&lt;(),</span> <span class="cls">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> std<span class="op">::</span>error<span class="op">::</span><span class="cls">Error</span><span class="op">&gt;&gt; {</span>
+    <span class="kw">let</span> client <span class="op">=</span> <span class="cls">Client</span><span class="op">::</span><span class="fn">new</span><span class="op">();</span>
+    <span class="kw">let</span> resp <span class="op">=</span> client
+        <span class="op">.</span><span class="fn">post</span><span class="op">(</span><span class="str">"http://localhost:3001/api/segment"</span><span class="op">)</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">(&amp;</span><span class="mac">json!</span><span class="op">({</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> <span class="str">"mode"</span><span class="op">:</span> <span class="str">"default"</span><span class="op">}))</span>
+        <span class="op">.</span><span class="fn">send</span><span class="op">()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">::&lt;</span>serde_json<span class="op">::</span><span class="cls">Value</span><span class="op">&gt;()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?;</span>
+    <span class="mac">println!</span><span class="op">(</span><span class="str">"{:?}"</span><span class="op">,</span> resp<span class="op">[</span><span class="str">"words"</span><span class="op">]);</span>
+    <span class="cls">Ok</span><span class="op">(())</span>
+<span class="op">}</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 2. POST /api/sensitive ── -->
+            <div class="api-card">
+                <div class="api-card-header">
+                    <span class="method-badge">POST</span>
+                    <span class="api-path">/api/sensitive</span>
+                    <span class="api-desc">敏感词检测</span>
+                </div>
+                <div class="api-card-body">
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>请求体 Request Body</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"text"</span><span class="jp">:</span> <span class="js">"这段文字可能包含敏感内容"</span>
+<span class="jp">}</span></div>
+                        </div>
+                        <div class="schema-box">
+                            <h4>响应 Response</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"found"</span><span class="jp">:</span> <span class="jb">true</span><span class="jp">,</span>
+  <span class="jk">"words"</span><span class="jp">:</span> <span class="jp">[</span><span class="js">"敏感词1"</span><span class="jp">,</span> <span class="js">"敏感词2"</span><span class="jp">],</span>
+  <span class="jk">"count"</span><span class="jp">:</span> <span class="jn">2</span>
+<span class="jp">}</span></div>
+                        </div>
+                    </div>
+                    <div class="lang-tabs">
+                        <div class="lang-tab active" onclick="switchLang('sensitive','curl',this)">curl</div>
+                        <div class="lang-tab" onclick="switchLang('sensitive','python',this)">Python</div>
+                        <div class="lang-tab" onclick="switchLang('sensitive','ts',this)">TypeScript</div>
+                        <div class="lang-tab" onclick="switchLang('sensitive','rust',this)">Rust</div>
+                    </div>
+                    <div class="lang-panels">
+                        <div class="lang-panel active" id="panel-sensitive-curl">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="var">curl</span> <span class="op">-X</span> POST http://localhost:3001/api/sensitive \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"text": "这段文字可能包含敏感内容"}'</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-sensitive-python">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">import</span> <span class="cls">requests</span>
+
+response <span class="op">=</span> <span class="cls">requests</span><span class="op">.</span><span class="fn">post</span><span class="op">(</span>
+    <span class="str">"http://localhost:3001/api/sensitive"</span><span class="op">,</span>
+    json<span class="op">={</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"这段文字可能包含敏感内容"</span><span class="op">}</span>
+<span class="op">)</span>
+result <span class="op">=</span> response<span class="op">.</span><span class="fn">json</span><span class="op">()</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"found"</span><span class="op">])</span>   <span class="cmt"># True / False</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"words"</span><span class="op">])</span>   <span class="cmt"># ['敏感词1', '敏感词2']</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-sensitive-ts">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span><span class="op">(</span><span class="str">"http://localhost:3001/api/sensitive"</span><span class="op">, {</span>
+  method<span class="op">:</span> <span class="str">"POST"</span><span class="op">,</span>
+  headers<span class="op">: {</span> <span class="str">"Content-Type"</span><span class="op">:</span> <span class="str">"application/json"</span> <span class="op">},</span>
+  body<span class="op">:</span> <span class="cls">JSON</span><span class="op">.</span><span class="fn">stringify</span><span class="op">({</span> text<span class="op">:</span> <span class="str">"这段文字可能包含敏感内容"</span> <span class="op">}),</span>
+<span class="op">});</span>
+<span class="kw">const</span> result <span class="op">=</span> <span class="kw">await</span> response<span class="op">.</span><span class="fn">json</span><span class="op">();</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>found<span class="op">);</span>   <span class="cmt">// true / false</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>words<span class="op">);</span>   <span class="cmt">// ['敏感词1', '敏感词2']</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-sensitive-rust">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">use</span> reqwest<span class="op">::</span><span class="cls">Client</span><span class="op">;</span>
+<span class="kw">use</span> serde_json<span class="op">::</span><span class="mac">json</span><span class="op">;</span>
+
+<span class="attr">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span><span class="op">() -&gt;</span> <span class="cls">Result</span><span class="op">&lt;(),</span> <span class="cls">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> std<span class="op">::</span>error<span class="op">::</span><span class="cls">Error</span><span class="op">&gt;&gt; {</span>
+    <span class="kw">let</span> client <span class="op">=</span> <span class="cls">Client</span><span class="op">::</span><span class="fn">new</span><span class="op">();</span>
+    <span class="kw">let</span> resp <span class="op">=</span> client
+        <span class="op">.</span><span class="fn">post</span><span class="op">(</span><span class="str">"http://localhost:3001/api/sensitive"</span><span class="op">)</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">(&amp;</span><span class="mac">json!</span><span class="op">({</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"这段文字可能包含敏感内容"</span><span class="op">}))</span>
+        <span class="op">.</span><span class="fn">send</span><span class="op">()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">::&lt;</span>serde_json<span class="op">::</span><span class="cls">Value</span><span class="op">&gt;()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?;</span>
+    <span class="mac">println!</span><span class="op">(</span><span class="str">"found: {}"</span><span class="op">,</span> resp<span class="op">[</span><span class="str">"found"</span><span class="op">]);</span>
+    <span class="cls">Ok</span><span class="op">(())</span>
+<span class="op">}</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 3. POST /api/analyze ── -->
+            <div class="api-card">
+                <div class="api-card-header">
+                    <span class="method-badge">POST</span>
+                    <span class="api-path">/api/analyze</span>
+                    <span class="api-desc">综合分析（分词 + 敏感词）</span>
+                </div>
+                <div class="api-card-body">
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>请求体 Request Body</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"text"</span><span class="jp">:</span> <span class="js">"我来到北京清华大学"</span><span class="jp">,</span>
+  <span class="jk">"mode"</span><span class="jp">:</span> <span class="js">"default"</span>
+<span class="jp">}</span></div>
+                        </div>
+                        <div class="schema-box">
+                            <h4>响应 Response</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"words"</span><span class="jp">:</span> <span class="jp">[</span><span class="js">"我"</span><span class="jp">,</span> <span class="js">"来到"</span><span class="jp">,</span> <span class="js">"北京"</span><span class="jp">,</span> <span class="js">"清华大学"</span><span class="jp">],</span>
+  <span class="jk">"word_count"</span><span class="jp">:</span> <span class="jn">4</span><span class="jp">,</span>
+  <span class="jk">"sensitive_words"</span><span class="jp">:</span> <span class="jp">[],</span>
+  <span class="jk">"elapsed_ms"</span><span class="jp">:</span> <span class="jn">0.12</span>
+<span class="jp">}</span></div>
+                        </div>
+                    </div>
+                    <div class="lang-tabs">
+                        <div class="lang-tab active" onclick="switchLang('analyze','curl',this)">curl</div>
+                        <div class="lang-tab" onclick="switchLang('analyze','python',this)">Python</div>
+                        <div class="lang-tab" onclick="switchLang('analyze','ts',this)">TypeScript</div>
+                        <div class="lang-tab" onclick="switchLang('analyze','rust',this)">Rust</div>
+                    </div>
+                    <div class="lang-panels">
+                        <div class="lang-panel active" id="panel-analyze-curl">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="var">curl</span> <span class="op">-X</span> POST http://localhost:3001/api/analyze \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"text": "我来到北京清华大学", "mode": "default"}'</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-analyze-python">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">import</span> <span class="cls">requests</span>
+
+response <span class="op">=</span> <span class="cls">requests</span><span class="op">.</span><span class="fn">post</span><span class="op">(</span>
+    <span class="str">"http://localhost:3001/api/analyze"</span><span class="op">,</span>
+    json<span class="op">={</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> <span class="str">"mode"</span><span class="op">:</span> <span class="str">"default"</span><span class="op">}</span>
+<span class="op">)</span>
+result <span class="op">=</span> response<span class="op">.</span><span class="fn">json</span><span class="op">()</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"words"</span><span class="op">])</span>            <span class="cmt"># ['我', '来到', '北京', '清华大学']</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"sensitive_words"</span><span class="op">])</span>   <span class="cmt"># []</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"elapsed_ms"</span><span class="op">])</span>        <span class="cmt"># 0.12</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-analyze-ts">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span><span class="op">(</span><span class="str">"http://localhost:3001/api/analyze"</span><span class="op">, {</span>
+  method<span class="op">:</span> <span class="str">"POST"</span><span class="op">,</span>
+  headers<span class="op">: {</span> <span class="str">"Content-Type"</span><span class="op">:</span> <span class="str">"application/json"</span> <span class="op">},</span>
+  body<span class="op">:</span> <span class="cls">JSON</span><span class="op">.</span><span class="fn">stringify</span><span class="op">({</span> text<span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> mode<span class="op">:</span> <span class="str">"default"</span> <span class="op">}),</span>
+<span class="op">});</span>
+<span class="kw">const</span> result <span class="op">=</span> <span class="kw">await</span> response<span class="op">.</span><span class="fn">json</span><span class="op">();</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>words<span class="op">);</span>           <span class="cmt">// ['我', '来到', '北京', '清华大学']</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>sensitive_words<span class="op">);</span> <span class="cmt">// []</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>elapsed_ms<span class="op">);</span>      <span class="cmt">// 0.12</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-analyze-rust">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">use</span> reqwest<span class="op">::</span><span class="cls">Client</span><span class="op">;</span>
+<span class="kw">use</span> serde_json<span class="op">::</span><span class="mac">json</span><span class="op">;</span>
+
+<span class="attr">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span><span class="op">() -&gt;</span> <span class="cls">Result</span><span class="op">&lt;(),</span> <span class="cls">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> std<span class="op">::</span>error<span class="op">::</span><span class="cls">Error</span><span class="op">&gt;&gt; {</span>
+    <span class="kw">let</span> client <span class="op">=</span> <span class="cls">Client</span><span class="op">::</span><span class="fn">new</span><span class="op">();</span>
+    <span class="kw">let</span> resp <span class="op">=</span> client
+        <span class="op">.</span><span class="fn">post</span><span class="op">(</span><span class="str">"http://localhost:3001/api/analyze"</span><span class="op">)</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">(&amp;</span><span class="mac">json!</span><span class="op">({</span><span class="str">"text"</span><span class="op">:</span> <span class="str">"我来到北京清华大学"</span><span class="op">,</span> <span class="str">"mode"</span><span class="op">:</span> <span class="str">"default"</span><span class="op">}))</span>
+        <span class="op">.</span><span class="fn">send</span><span class="op">()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">::&lt;</span>serde_json<span class="op">::</span><span class="cls">Value</span><span class="op">&gt;()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?;</span>
+    <span class="mac">println!</span><span class="op">(</span><span class="str">"{}"</span><span class="op">,</span> serde_json<span class="op">::</span><span class="fn">to_string_pretty</span><span class="op">(&amp;</span>resp<span class="op">)?</span><span class="op">);</span>
+    <span class="cls">Ok</span><span class="op">(())</span>
+<span class="op">}</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 4. POST /api/dict/add ── -->
+            <div class="api-card">
+                <div class="api-card-header">
+                    <span class="method-badge">POST</span>
+                    <span class="api-path">/api/dict/add</span>
+                    <span class="api-desc">添加自定义词汇</span>
+                </div>
+                <div class="api-card-body">
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>请求体 Request Body</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"word"</span><span class="jp">:</span>  <span class="js">"OpenAI"</span><span class="jp">,</span>
+  <span class="jk">"freq"</span><span class="jp">:</span>  <span class="jn">5000</span><span class="jp">,</span>
+  <span class="jk">"pos"</span><span class="jp">:</span>   <span class="js">"nz"</span>
+<span class="jp">}</span></div>
+                        </div>
+                        <div class="schema-box">
+                            <h4>响应 Response</h4>
+                            <div class="json-block"><span class="jp">{</span>
+  <span class="jk">"success"</span><span class="jp">:</span> <span class="jb">true</span><span class="jp">,</span>
+  <span class="jk">"word"</span><span class="jp">:</span>    <span class="js">"OpenAI"</span><span class="jp">,</span>
+  <span class="jk">"message"</span><span class="jp">:</span> <span class="js">"word added successfully"</span>
+<span class="jp">}</span></div>
+                        </div>
+                    </div>
+                    <div class="lang-tabs">
+                        <div class="lang-tab active" onclick="switchLang('dictadd','curl',this)">curl</div>
+                        <div class="lang-tab" onclick="switchLang('dictadd','python',this)">Python</div>
+                        <div class="lang-tab" onclick="switchLang('dictadd','ts',this)">TypeScript</div>
+                        <div class="lang-tab" onclick="switchLang('dictadd','rust',this)">Rust</div>
+                    </div>
+                    <div class="lang-panels">
+                        <div class="lang-panel active" id="panel-dictadd-curl">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="var">curl</span> <span class="op">-X</span> POST http://localhost:3001/api/dict/add \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"word": "OpenAI", "freq": 5000, "pos": "nz"}'</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-dictadd-python">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">import</span> <span class="cls">requests</span>
+
+response <span class="op">=</span> <span class="cls">requests</span><span class="op">.</span><span class="fn">post</span><span class="op">(</span>
+    <span class="str">"http://localhost:3001/api/dict/add"</span><span class="op">,</span>
+    json<span class="op">={</span><span class="str">"word"</span><span class="op">:</span> <span class="str">"OpenAI"</span><span class="op">,</span> <span class="str">"freq"</span><span class="op">:</span> <span class="num">5000</span><span class="op">,</span> <span class="str">"pos"</span><span class="op">:</span> <span class="str">"nz"</span><span class="op">}</span>
+<span class="op">)</span>
+result <span class="op">=</span> response<span class="op">.</span><span class="fn">json</span><span class="op">()</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"success"</span><span class="op">])</span>  <span class="cmt"># True</span>
+<span class="fn">print</span><span class="op">(</span>result<span class="op">[</span><span class="str">"message"</span><span class="op">])</span>  <span class="cmt"># "word added successfully"</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-dictadd-ts">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">const</span> response <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span><span class="op">(</span><span class="str">"http://localhost:3001/api/dict/add"</span><span class="op">, {</span>
+  method<span class="op">:</span> <span class="str">"POST"</span><span class="op">,</span>
+  headers<span class="op">: {</span> <span class="str">"Content-Type"</span><span class="op">:</span> <span class="str">"application/json"</span> <span class="op">},</span>
+  body<span class="op">:</span> <span class="cls">JSON</span><span class="op">.</span><span class="fn">stringify</span><span class="op">({</span> word<span class="op">:</span> <span class="str">"OpenAI"</span><span class="op">,</span> freq<span class="op">:</span> <span class="num">5000</span><span class="op">,</span> pos<span class="op">:</span> <span class="str">"nz"</span> <span class="op">}),</span>
+<span class="op">});</span>
+<span class="kw">const</span> result <span class="op">=</span> <span class="kw">await</span> response<span class="op">.</span><span class="fn">json</span><span class="op">();</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>success<span class="op">);</span>  <span class="cmt">// true</span>
+<span class="cls">console</span><span class="op">.</span><span class="fn">log</span><span class="op">(</span>result<span class="op">.</span>message<span class="op">);</span>  <span class="cmt">// "word added successfully"</span></pre>
+                            </div>
+                        </div>
+                        <div class="lang-panel" id="panel-dictadd-rust">
+                            <div class="code-block-wrap">
+                                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<pre><span class="kw">use</span> reqwest<span class="op">::</span><span class="cls">Client</span><span class="op">;</span>
+<span class="kw">use</span> serde_json<span class="op">::</span><span class="mac">json</span><span class="op">;</span>
+
+<span class="attr">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span><span class="op">() -&gt;</span> <span class="cls">Result</span><span class="op">&lt;(),</span> <span class="cls">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> std<span class="op">::</span>error<span class="op">::</span><span class="cls">Error</span><span class="op">&gt;&gt; {</span>
+    <span class="kw">let</span> client <span class="op">=</span> <span class="cls">Client</span><span class="op">::</span><span class="fn">new</span><span class="op">();</span>
+    <span class="kw">let</span> resp <span class="op">=</span> client
+        <span class="op">.</span><span class="fn">post</span><span class="op">(</span><span class="str">"http://localhost:3001/api/dict/add"</span><span class="op">)</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">(&amp;</span><span class="mac">json!</span><span class="op">({</span>
+            <span class="str">"word"</span><span class="op">:</span> <span class="str">"OpenAI"</span><span class="op">,</span>
+            <span class="str">"freq"</span><span class="op">:</span> <span class="num">5000</span><span class="op">,</span>
+            <span class="str">"pos"</span><span class="op">:</span>  <span class="str">"nz"</span>
+        <span class="op">}))</span>
+        <span class="op">.</span><span class="fn">send</span><span class="op">()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?</span>
+        <span class="op">.</span><span class="fn">json</span><span class="op">::&lt;</span>serde_json<span class="op">::</span><span class="cls">Value</span><span class="op">&gt;()</span>
+        <span class="op">.</span><span class="kw">await</span><span class="op">?;</span>
+    <span class="mac">println!</span><span class="op">(</span><span class="str">"success: {}"</span><span class="op">,</span> resp<span class="op">[</span><span class="str">"success"</span><span class="op">]);</span>
+    <span class="cls">Ok</span><span class="op">(())</span>
+<span class="op">}</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="api-footer">
+                🌐 Base URL: <span>http://localhost:3001</span>
+            </div>
+
+        </div><!-- /api-docs -->
+    </div><!-- /page-docs -->
+
+</div><!-- /container -->
 
 <div class="toast" id="toast"></div>
 
@@ -298,13 +899,58 @@ const API = '';
 let debounceTimer = null;
 const COLORS = ['token-1', 'token-2', 'token-3', 'token-4', 'token-5'];
 
+/* ── Page tab switching ── */
+function switchPage(name, el) {
+    document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('page-' + name).classList.add('active');
+}
+
+/* ── Language tab switching ── */
+function switchLang(endpoint, lang, tabEl) {
+    // deactivate sibling tabs
+    const tabs = tabEl.parentElement.querySelectorAll('.lang-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+    // deactivate sibling panels
+    const panels = tabEl.closest('.api-card-body').querySelectorAll('.lang-panel');
+    panels.forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${endpoint}-${lang}`).classList.add('active');
+}
+
+/* ── Copy code ── */
+function copyCode(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ 已复制';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = '✓ 已复制';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+
+/* ── Demo functions ── */
 async function doSegment() {
     const text = document.getElementById('inputText').value.trim();
     if (!text) return;
     const mode = document.getElementById('modeSelect').value;
     
     try {
-        const t0 = performance.now();
         const res = await fetch(`${API}/api/segment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -354,7 +1000,6 @@ async function addSensitiveWord() {
     if (!word) return;
     
     try {
-        // Add to sensitive via the dict endpoint workaround - for now just notify
         showToast(`敏感词 "${word}" 已添加`);
         document.getElementById('newSensitive').value = '';
     } catch (e) {
